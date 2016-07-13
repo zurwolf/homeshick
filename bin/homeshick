@@ -82,6 +82,16 @@ while [[ $# -gt 0 ]]; do
 			-f | --force) FORCE=true ; shift; continue ;;
 			-b | --batch) BATCH=true ; shift; continue ;;
 			-v | --verbose) VERBOSE=true ; shift; continue ;;
+			-r | --remote)
+				if [[ $cmd == check ]]; then
+					if [[ $# -gt 1 ]]; then
+						remote=$2 ; shift 2; continue
+					else
+						err $EX_USAGE "Missing parameter for '$1' option"
+					fi
+				else
+					err $EX_USAGE "Unknown option '$1'"
+				fi ;;
 			*)     err $EX_USAGE "Unknown option '$1'" ;;
 		esac
 	fi
@@ -136,7 +146,7 @@ case $cmd in
 			case $cmd in
 				clone)         clone "$param"               ;;
 				generate)      generate "$param"            ;;
-				check|updates) check "$param"               ;;
+				check|updates) check "$param" "$remote"     ;;
 				refresh)       refresh $threshhold "$param" ;;
 				pull)          pull "$param"                ;;
 				symlink|link)  symlink "$param"             ;;
